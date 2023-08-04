@@ -26,7 +26,7 @@
   # Settings
 
   boot = {
-    kernelParams = [ "nomodeset" ];
+    # kernelParams = ["nomodeset"];
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot = {
@@ -44,7 +44,25 @@
     curl
     vim
     wget
+    seatd
   ];
+
+  fonts = {
+    fonts = with pkgs; [
+      noto-fonts
+      noto-fonts-cjk
+      noto-fonts-emoji
+      font-awesome
+      source-han-sans
+      source-han-serif
+    ];
+    fontconfig.defaultFonts = {
+      serif = [ "Noto Serif" "Source Han Serif" ];
+      sansSerif = [ "Noto Sans" "Source Han Sans" ];
+    };
+  };
+
+  hardware.opengl.enable = true;
 
   i18n.defaultLocale = "en_US.UTF-8";
 
@@ -55,6 +73,10 @@
   };
 
   programs = {
+    fish = {
+      enable = true;
+      useBabelfish = true;
+    };
     gnupg.agent = {
       enable = true;
       enableBrowserSocket = true;
@@ -66,17 +88,27 @@
     zsh.enable = true;
   };
 
+  security = {
+    polkit.enable = true;
+    rtkit.enable = true;
+  };
+  
   services = {
     openssh.enable = true;
     pipewire = {
       enable = true;
-      alsa.enable = true;
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
       jack.enable = true;
       pulse.enable = true;
       wireplumber.enable = true;
     };
     printing.enable = true;
+    qemuGuest.enable = true;
   };
+  
   sound.enable = true;
 
   time.timeZone = "Asia/Taipei";
@@ -89,7 +121,7 @@
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEhr2XitKqLvfKw400fXTf1Oa1WKO26OVSvs3LDCYnNW openpgp:0x36134CDE"
       ];
-      shell = pkgs.zsh;
+      shell = pkgs.fish;
     };
   };
 

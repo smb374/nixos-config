@@ -17,27 +17,34 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = [
+  home.packages = with pkgs; [
+    htop
+    nodePackages_latest.pnpm
+    nodePackages_latest.npm
+    gcc
+    fd
+    unzip
+    nodejs
+    rustup
+    nixpkgs-fmt
+    cachix
+    light
+    babelfish
+    brave
+    pciutils
+    drm_info
+    ripgrep
+    lazygit
+  ] ++ [
+    # Fonts
     (pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
-    pkgs.htop
-    pkgs.nodePackages_latest.pnpm
-    pkgs.nodePackages_latest.npm
-    pkgs.gcc
-    pkgs.fd
-    pkgs.unzip
-    pkgs.nodejs
-    pkgs.rustup
-    pkgs.nixpkgs-fmt
-    pkgs.cachix
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = { };
 
-  home.sessionVariables = {
-    # EDITOR = "emacs";
-  };
+  home.sessionVariables = { };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -50,6 +57,6 @@
     enable = true;
     defaultEditor = true;
   };
-  programs.ripgrep.enable = true;
-  programs.lazygit.enable = true;
+  # programs.ripgrep.enable = true;
+  # programs.lazygit.enable = true;
 }

@@ -3,9 +3,9 @@
 
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-23.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     hyprland.url = "github:hyprwm/Hyprland";
@@ -25,8 +25,14 @@
         modules = [
           hyprland.homeManagerModules.default
           ./home.nix
-          ./hyprland.nix
-        ];
+        ] ++ (
+          let
+            programs = builtins.readDir ./programs;
+            files = builtins.attrNames (pkgs.lib.attrsets.filterAttrs (k: v: v == "regular") programs);
+            nixes = builtins.filter (f: builtins.match ".*\.nix$" f != null) files;
+          in
+          builtins.map (f: ./programs + "/${f}") nixes
+        );
 
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
